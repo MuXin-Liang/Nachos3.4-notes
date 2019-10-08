@@ -40,7 +40,7 @@ Thread::Thread(char* threadName)
     status = JUST_CREATED;
 
     //此处修改,使每个线程创建时维护ThreadID。如果无法分配ThreadID，用ASSERT退出线程的创建。
-    ThreadID = -1
+    ThreadID = -1;
     for(int i = 0; i<128 ;i++){
         if (ThreadIDArray[i] == 0){
             ThreadIDArray[i] = 1;
@@ -52,7 +52,7 @@ Thread::Thread(char* threadName)
     }
 
     if(ThreadID == -1)
-        printf("ThreadNum reachs the limit,cannot create new Thread!")
+        printf("ThreadNum reachs the limit,cannot create new Thread!");
     ASSERT(ThreadID!=-1)
 
 
@@ -82,6 +82,7 @@ Thread::~Thread()
     //此处修改，回收ThreadID
     ThreadNum--;
     ThreadIDArray[ThreadID] = 0;
+    ThreadArray[ThreadID] = NULL;
 
     if (stack != NULL)
 	DeallocBoundedArray((char *) stack, StackSize * sizeof(int));
@@ -311,7 +312,7 @@ void TS(){
     printf("Thread Status:");
     for(int i = 0;i < 128;i++){
         if(ThreadIDArray[i] != 0){
-            printf("ThreadID: %d, ThreadName: %s, ThreadStatus:%s \n", ThreadArray[i]->getThreadID(), ThreadArray[i]->getName(),ThreadArray[i]->);
+            printf("ThreadID: %d, ThreadName: %s, ThreadStatus:%d \n", ThreadArray[i]->getThreadID(), ThreadArray[i]->getName(),ThreadArray[i]->getStatus());
         }
     }
 }
