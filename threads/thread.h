@@ -83,6 +83,7 @@ class Thread {
     //这里修改,添加用户ID与ThreadID
     int UserID;
     int ThreadID;
+    int Priority;
 
   public:
     Thread(char* debugName);		// initialize a Thread 
@@ -108,6 +109,8 @@ class Thread {
     int getUserID(){ return (UserID); }
     int getThreadID(){ return (ThreadID); }
     ThreadStatus getStatus(){ return (status);}
+    int getPriority(){ return (Priority);}
+    void setPriority(int p){ Priority = p; }
 
     void Print() { printf("%s, ", name); }
 

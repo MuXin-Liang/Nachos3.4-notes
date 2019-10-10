@@ -14,7 +14,7 @@
 #include "elevatortest.h"
 
 // testnum is set in main.cc
-int testnum = 1;
+int testnum = 2;
 
 //----------------------------------------------------------------------
 // SimpleThread
@@ -31,10 +31,48 @@ SimpleThread(int which)
     int num;
     
     for (num = 0; num < 5; num++) {
-	printf("*** thread %d looped %d times\n", which, num);
+	printf("*** thread %s, %d looped %d times\n",currentThread->getName(),which, num);
         currentThread->Yield();
+
     }
 }
+
+void
+SimpleThread3(int which)
+{
+    int num;
+    for (num = 0; num < 3; num++) {
+        printf("*** thread %s looped %d times,priority:%d \n", currentThread->getName(), num,currentThread->getPriority());
+    }
+}
+
+void
+SimpleThread2(int which)
+{
+    int num;
+    
+    for (num = 0; num < 3; num++) {
+        printf("*** thread %s looped %d times,priority:%d \n", currentThread->getName(), num,currentThread->getPriority());
+    }
+
+    Thread *t2 = new Thread("forked_thread2");
+    t2->setPriority(1);
+    t2->Fork(SimpleThread3, (void*)2);
+
+    for (num = 3; num < 6; num++) {
+        printf("*** thread %s looped %d times,priority:%d \n", currentThread->getName(), num,currentThread->getPriority());
+    }
+
+    Thread *t3 = new Thread("forked_thread3");
+    t3->setPriority(3);
+    t3->Fork(SimpleThread3, (void*)3);
+
+    for (num = 6; num < 9; num++) {
+        printf("*** thread %s looped %d times,priority:%d \n", currentThread->getName(), num,currentThread->getPriority());
+    }
+}
+
+
 
 //----------------------------------------------------------------------
 // ThreadTest1
@@ -48,8 +86,8 @@ ThreadTest1()
     DEBUG('t', "Entering ThreadTest1");
 
     Thread *t = new Thread("forked thread");
-
     t->Fork(SimpleThread, (void*)1);
+
     SimpleThread(0);
 }
 
@@ -62,7 +100,7 @@ void
 ThreadTest2()
 {
     DEBUG('t', "Entering ThreadTest2");
-
+    ThreadTest1();
     TS();
 }
 
@@ -76,10 +114,34 @@ ThreadTest3()
 {
     DEBUG('t', "Entering ThreadTest3");
 
-    for(int i = 0;i<129;i++){
-        ThreadTest1();
+    for(int i = 0;i<127;i++){
+
+        Thread *t = new Thread("forked thread");
+        t->Fork(SimpleThread2, (void*)1);
     }
+    TS();
+    Thread *t = new Thread("forked thread");
+    t->Fork(SimpleThread2, (void*)1);
+    
 }
+
+
+//----------------------------------------------------------------------
+// ThreadTest4
+// 测试抢占式调度算法
+//----------------------------------------------------------------------
+
+void
+ThreadTest4()
+{
+    DEBUG('t', "Entering ThreadTest4");
+
+    Thread *t1 = new Thread("forked_thread1");
+    t1->setPriority(2);
+    t1->Fork(SimpleThread2, (void*)1);
+    
+}
+
 
 //----------------------------------------------------------------------
 // ThreadTest
@@ -99,6 +161,8 @@ ThreadTest()
     case 3:
     ThreadTest3();
     break;
+    case 4:
+    ThreadTest4();
     default:
 	printf("No test specified.\n");
 	break;

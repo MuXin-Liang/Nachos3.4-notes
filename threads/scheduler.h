@@ -1,6 +1,7 @@
 // scheduler.h 
 //	Data structures for the thread dispatcher and scheduler.
 //	Primarily, the list of threads that are ready to run.
+//  线程调度相关的数据结构。主要是线程的就绪列表。
 //
 // Copyright (c) 1992-1993 The Regents of the University of California.
 // All rights reserved.  See copyright.h for copyright notice and limitation 
@@ -16,17 +17,19 @@
 // The following class defines the scheduler/dispatcher abstraction -- 
 // the data structures and operations needed to keep track of which 
 // thread is running, and which threads are ready but not running.
+// Scheduler类定义了调度器的抽象。(scheduler和dispathcer的区别是什么？)
+// 这个数据结构主要知道那个线程是正在运行的，哪些线程是处于就绪态的。
 
 class Scheduler {
   public:
     Scheduler();			// Initialize list of ready threads 
     ~Scheduler();			// De-allocate ready list
 
-    void ReadyToRun(Thread* thread);	// Thread can be dispatched.
-    Thread* FindNextToRun();		// Dequeue first thread on the ready 
+    void ReadyToRun(Thread* thread);	// Thread can be dispatched. 
+    Thread* FindNextToRun();		// Dequeue first thread on the ready 从就绪队列出队一个可以运行的线程
 					// list, if any, and return thread.
-    void Run(Thread* nextThread);	// Cause nextThread to start running
-    void Print();			// Print contents of ready list
+    void Run(Thread* nextThread);	// Cause nextThread to start running 令一个线程跑起来
+    void Print();			// Print contents of ready list 打印就绪队列中的线程信息
     
   private:
     List *readyList;  		// queue of threads that are ready to run,

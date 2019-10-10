@@ -18,6 +18,11 @@ Interrupt *interrupt;			// interrupt status
 Statistics *stats;			// performance metrics
 Timer *timer;				// the hardware timer device,
 					// for invoking context switches
+                    
+//此处修改，添加线程数量ThreadID与ThreadIDArray
+extern int ThreadNum;
+extern int ThreadIDArray[128];
+extern Thread* ThreadArray[128];
 
 #ifdef FILESYS_NEEDED
 FileSystem  *fileSystem;

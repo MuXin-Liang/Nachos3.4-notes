@@ -38,6 +38,7 @@ Thread::Thread(char* threadName)
     stackTop = NULL;
     stack = NULL;
     status = JUST_CREATED;
+    Priority = 10;
 
     //此处修改,使每个线程创建时维护ThreadID。如果无法分配ThreadID，用ASSERT退出线程的创建。
     ThreadID = -1;
@@ -309,10 +310,12 @@ Thread::StackAllocate (VoidFunctionPtr func, void *arg)
 
 //此处修改，添加TS函数
 void TS(){
-    printf("Thread Status:");
+    printf("Thread Status:\n");
     for(int i = 0;i < 128;i++){
         if(ThreadIDArray[i] != 0){
-            printf("ThreadID: %d, ThreadName: %s, ThreadStatus:%d \n", ThreadArray[i]->getThreadID(), ThreadArray[i]->getName(),ThreadArray[i]->getStatus());
+            printf(
+                "ThreadID: %d, ThreadName: %s, ThreadStatus:%d, Priority:%d \n", 
+                ThreadArray[i]->getThreadID(), ThreadArray[i]->getName(),ThreadArray[i]->getStatus(),ThreadArray[i]->getPriority());
         }
     }
 }

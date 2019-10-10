@@ -48,6 +48,7 @@ Scheduler::~Scheduler()
 //	Put it on the ready list, for later scheduling onto the CPU.
 //
 //	"thread" is the thread to be put on the ready list.
+//  此处修改：增加了抢占式调度。
 //----------------------------------------------------------------------
 
 void
@@ -56,7 +57,10 @@ Scheduler::ReadyToRun (Thread *thread)
     DEBUG('t', "Putting thread %s on ready list.\n", thread->getName());
 
     thread->setStatus(READY);
-    readyList->Append((void *)thread);
+    readyList->SortedInsert((void *)thread,thread->getPriority());
+    if (currentThread->getPriority() > thread->getPriority()){
+        currentThread->Yield();
+    }
 }
 
 //----------------------------------------------------------------------
